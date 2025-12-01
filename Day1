@@ -1,0 +1,47 @@
+# Day 1 – Snowflake Environment Setup & Data Staging
+
+## 1. Snowflake Environment
+
+- Created/verified Snowflake account.
+- Confirmed trial credits and default role.
+- Created an X-Small warehouse with auto-suspend:
+
+SQL:
+  CREATE WAREHOUSE IF NOT EXISTS compute_wh
+  WITH
+    WAREHOUSE_SIZE = 'XSMALL'
+    AUTO_SUSPEND = 60
+    AUTO_RESUME = TRUE
+    INITIALLY_SUSPENDED = TRUE;
+- Created project database and schemas:
+SQL:
+database and schemas:
+
+CREATE DATABASE IF NOT EXISTS retail_analytics;
+
+CREATE SCHEMA IF NOT EXISTS retail_analytics.bronze;
+CREATE SCHEMA IF NOT EXISTS retail_analytics.silver;
+CREATE SCHEMA IF NOT EXISTS retail_analytics.gold;
+CREATE SCHEMA IF NOT EXISTS retail_analytics.technical;
+
+- Dataset Choice: Selected UCI Online Retail II (Kaggle) as the main dataset for:
+  - Customer 360
+  - Sales analytics
+  - Time-series forecasting
+  - Anomaly detection
+  - AI summarization and vector search.
+  - Downloaded the dataset from Kaggle and exported the Excel sheets to a single CSV file:
+  - online_retail_II.csv
+- Internal Stage & File Upload:
+  - Create an internal snowflake stage
+CREATE OR REPLACE STAGE retail_analytics.bronze.internal_stage
+FILE_FORMAT = (
+  TYPE = CSV
+  FIELD_OPTIONALLY_ENCLOSED_BY = '"'
+  SKIP_HEADER = 1
+);
+Uploaded online_retail_II.csv to the stage using the Snowflake UI.
+
+Verified the staged file:
+LIST @retail_analytics.bronze.internal_stage;
+
